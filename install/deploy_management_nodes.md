@@ -8,7 +8,7 @@ take place. Watching the console or the console log for certain nodes can help t
 what happens and when. When the process completes for all nodes, the Ceph storage is
 initialized and the Kubernetes cluster is created and ready for a workload. The PIT node
 will join Kubernetes after it is rebooted later in
-[Deploy Final NCN](index.md#deploy_final_ncn).
+[Deploy Final NCN](index.md#8-deploy-final-ncn).
 
 <a name="timing-of-deployments"></a>
 
@@ -25,7 +25,7 @@ the number of storage and worker nodes.
       1. [Tokens and IPMI Password](#tokens-and-ipmi-password)
       1. [Ensure Time Is Accurate Before Deploying NCNs](#ensure-time-is-accurate-before-deploying-ncns)
    1. [Update Management Node Firmware](#update_management_node_firmware)
-   1. [Deploy Management Nodes](#deploy_management_nodes)
+   1. [Deploy Management Nodes](#5-deploy-management-nodes)
       1. [Deploy Workflow](#deploy-workflow)
       1. [Deploy](#deploy)
       1. [Check LVM on Masters and Workers](#check-lvm-on-masters-and-workers)
@@ -87,114 +87,6 @@ Preparation of the environment must be done before attempting to deploy the mana
    ```
 
 <a name="ensure-time-is-accurate-before-deploying-ncns"></a>
-
-### 1.2 Ensure Time Is Accurate Before Deploying NCNs
-
-**NOTE:** Optionally, in order to use a timezone other than UTC, instead of step 1 below, follow
-[this procedure for setting a local timezone](../operations/node_management/Configure_NTP_on_NCNs.md#set-a-local-timezone). Then
-proceed to step 2.
-
-1. Ensure that the PIT node has the correct current time.
-
-   The time can be inaccurate if the system has been powered off for a long time, or, for example, the CMOS was cleared on a Gigabyte node. See [Clear Gigabyte CMOS](clear_gigabyte_cmos.md).
-
-   > **This step should not be skipped.**
-
-   Check the time on the PIT node to see whether it matches the current time:
-
-   ```bash
-   pit# date "+%Y-%m-%d %H:%M:%S.%6N%z"
-   ```
-
-   If the time is inaccurate, set the time manually.
-
-   ```bash
-   pit# timedatectl set-time "2019-11-15 00:00:00"
-   ```
-
-   Run the NTP script:
-
-   ```bash
-   pit# /root/bin/configure-ntp.sh
-   ```
-
-   This ensures that the PIT is configured with an accurate date/time, which will be propagated to the NCNs during boot.
-
-   If the error `Failed to set time: NTP unit is active` is observed, then stop `chrony` first.
-
-   ```bash
-   pit# systemctl stop chronyd
-   ```
-
-   Then run the commands above to complete the process.
-
-1. Ensure that the current time is set in BIOS for all management NCNs.
-
-   Each NCN is booted to the BIOS menu, the date and time are checked, and set to the current UTC time if needed.
-
-   > **NOTE:** Some steps in this procedure depend on `USERNAME` and `IPMI_PASSWORD` being set. This is done in
-[Tokens and IPMI Password](#tokens-and-ipmi-password).
-
-   Repeat the following process for each NCN.
-
-   1. Set the `bmc` variable to the name of the BMC of the NCN being checked.
-
-      **Important:** Be sure to change the below example to the appropriate NCN.
-
-      ```console
-      pit# bmc=ncn-w001-mgmt
-      ```
-
-   1. Start an IPMI console session to the NCN.
-
-      ```console
-      pit# conman -j $bmc
-      ```
-
-   1. Using another terminal to watch the console, boot the node to BIOS.
-
-      ```console
-      pit# ipmitool -I lanplus -U $USERNAME -E -H $bmc chassis bootdev bios
-      pit# ipmitool -I lanplus -U $USERNAME -E -H $bmc chassis power off && sleep 10 && \
-           ipmitool -I lanplus -U $USERNAME -E -H $bmc chassis power on
-      ```
-
-      > For HPE NCNs, the above process will boot the nodes to their BIOS; however, the BIOS menu is unavailable through conman because
-      > the node is booted into a graphical BIOS menu.
-      >
-      > In order to access the serial version of the BIOS menu, perform the `ipmitool` steps above to boot the node.
-      > Then, in conman, press `ESC+9` key combination when
-      > the following messages are shown on the console. That key combination will open a menu that can be used to enter
-      > the BIOS using conman.
-      >
-      > ```text
-      > For access via BIOS Serial Console:
-      > Press 'ESC+9' for System Utilities
-      > Press 'ESC+0' for Intelligent Provisioning
-      > Press 'ESC+!' for One-Time Boot Menu
-      > Press 'ESC+@' for Network Boot
-      > ```
-      >
-      > For HPE NCNs, the date configuration menu is at the following path: `System Configuration -> BIOS/Platform Configuration (RBSU) -> Date and Time`.
-      >
-      > Alternatively, for HPE NCNs, log in to the BMC's web interface and access the HTML5 console for the node, in order to interact with the graphical BIOS.
-      > From the administrator's own machine, create an SSH tunnel (`-L` creates the tunnel; `-N` prevents a shell and stubs the connection):
-      >
-      > ```bash
-      > linux# bmc=ncn-w001-mgmt # Change this to be the appropriate node
-      > linux# ssh -L 9443:$bmc:443 -N root@eniac-ncn-m001
-      > ```
-      >
-      > Opening a web browser to `https://localhost:9443` will give access to the BMC's web interface.
-
-   1. When the node boots, the conman session can be used to see the BIOS menu, in order to check and set the time to current UTC time.
-      The process varies depending on the vendor of the NCN.
-
-   1. After the correct time has been verified, power off the NCN.
-
-   Repeat the above process for each NCN.
-
-<a name="update_management_node_firmware"></a>
 
 ## 2. Update Management Node Firmware
 
@@ -630,12 +522,12 @@ If there are LVM check failures, then the problem must be resolved before contin
     1. Wipe each worker node using the 'Basic Wipe' section of [Wipe NCN Disks for Reinstallation](wipe_ncn_disks_for_reinstallation.md#basic-wipe).
     1. Wipe each master node (**except** `ncn-m001` because it is the PIT node) using the 'Basic Wipe' section of [Wipe NCN Disks for Reinstallation](wipe_ncn_disks_for_reinstallation.md#basic-wipe).
     1. Wipe each storage node using the 'Full Wipe' section of [Wipe NCN Disks for Reinstallation](wipe_ncn_disks_for_reinstallation.md#full-wipe).
-    1. Return to the [Set each node to always UEFI Network Boot, and ensure they are powered off](#set-uefi-and-power-off) step of the [Deploy Management Nodes](#deploy_management_nodes) section above.
+    1. Return to the [Set each node to always UEFI Network Boot, and ensure they are powered off](#set-uefi-and-power-off) step of the [Deploy Management Nodes](#5-deploy-management-nodes) section above.
 
 * If **only worker nodes** have the problem, then wipe and redeploy the affected worker nodes before continuing the installation:
     1. Wipe each affected worker node using the 'Basic Wipe' section of [Wipe NCN Disks for Reinstallation](wipe_ncn_disks_for_reinstallation.md#basic-wipe).
     1. Power off each affected worker node.
-    1. Return to the [Boot the Master and Worker Nodes](#boot-master-and-worker-nodes) step of the [Deploy Management Nodes](#deploy_management_nodes) section above.
+    1. Return to the [Boot the Master and Worker Nodes](#boot-master-and-worker-nodes) step of the [Deploy Management Nodes](#5-deploy-management-nodes) section above.
         * Note: The `ipmitool` command will give errors trying to power on the unaffected nodes, because they are already powered on -- this is expected and not a problem.
 
 <a name="check-for-unused-drives-on-utility-storage-nodes"></a>
@@ -938,7 +830,7 @@ Observe the output of the checks and note any failures, then remediate them.
    At this point, it is necessary to wipe the NCNs and start the PXE boot again:
 
    1. Wipe the NCNs using the 'Basic Wipe' section of [Wipe NCN Disks for Reinstallation](wipe_ncn_disks_for_reinstallation.md).
-   1. Return to the 'Boot the **Storage Nodes**' step of [Deploy Management Nodes](#deploy_management_nodes) section above.
+   1. Return to the 'Boot the **Storage Nodes**' step of [Deploy Management Nodes](#5-deploy-management-nodes) section above.
 
 <a name="optional-validation"></a>
 
@@ -970,4 +862,4 @@ Before proceeding, be aware that this is the last point where the other NCN node
 
 After completing the deployment of the management nodes, the next step is to install the CSM services.
 
-See [Install CSM Services](index.md#install_csm_services)
+See [Install CSM Services](index.md#6-install-csm-services)

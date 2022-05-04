@@ -9,8 +9,6 @@ The procedures described on this page must be completed before any node is boote
  1. [Wipe Disks on Booted Nodes](#wipe_disks_on_booted_nodes)
  1. [Power Off Booted Nodes](#power_off_booted_nodes)
  1. [Set Node BMCs to DHCP](#set_node_bmcs_to_dhcp)
- 1. [Wipe USB Device on PIT Node](#wipe_usb_device_on_pit_node) (**Only if** switching from USB LiveCD method to RemoteISO LiveCD method)
- 1. [Power Off PIT Node](#power_off_pit_node)
 
 <a name="quiesce_compute_and_application_nodes"></a>
 ## Quiesce compute nodes and application nodes.
@@ -178,31 +176,12 @@ Set the BMCs on the management nodes to DHCP.
         done
         ```
 
-<a name="wipe_usb_device_on_pit_node"></a>
-## Wipe USB Device on PIT Node
-
-If intending to boot the PIT node from the Remote ISO and there is a USB device which was previously used with LiveCD data, it should be wiped to avoid having two devices with disk labels claiming to be the LiveCD. Alternatively, the USB device could be removed from the PIT node.
-
-1. If not removing the USB device from `ncn-m001`, then wipe its USB storage with the following command:
-
-    ```bash
-    ncn-m001# wipefs --all --force /dev/disk/by-label/cow /dev/disk/by-label/PITDATA /dev/disk/by-label/BOOT /dev/disk/by-label/CRAYLIVE
-    ```
-
-<a name="power_off_pit_node"></a>
-## Power Off PIT Node
-
-> **`Skip this step if`** you are planning to use this node as a staging area to create the USB LiveCD.
-
-Shut down the LiveCD or `ncn-m001` node.
-```bash
-ncn-m001# poweroff
-```
+The process is now done, the NCNs are ready for a deploy.
 
 <a name="next-topic"></a>
 ## Next Topic
 
    After completing this procedure the next step is to bootstrap the PIT node.
 
-   * See [Bootstrap PIT Node](index.md#bootstrap_pit_node)
+   * See [Bootstrap PIT Node](index.md#2-bootstrap-pit-node)
 

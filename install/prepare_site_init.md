@@ -8,24 +8,24 @@ The only difference in this procedure is that the RemoteISO method will execute 
 on any Linux system. This procedure works for both methods, so in order to be generic, this document uses the command prompt of `linux#` in its
 examples.
 
-1. [Background](#background)
-1. [Create and Initialize Site-Init Directory](#create-and-initialize-site-init-directory)
-1. [Create Baseline System Customizations](#create-baseline-system-customizations)
-1. [Generate Sealed Secrets](#generate-sealed-secrets)
-1. [Version Control Site-Init Files](#version-control-site-init-files)
-    1. [Push to a Remote Repository](#push-to-a-remote-repository)
-1. [Customer-Specific Customizations](#customer-specific-customizations)
+1. [Background](#1-background)
+1. [Create and Initialize Site-Init Directory](#2-create-and-initialize-site-init-directory)
+1. [Create Baseline System Customizations](#3-create-baseline-system-customizations)
+1. [Generate Sealed Secrets](#4-generate-sealed-secrets)
+1. [Version Control Site-Init Files](#5-version-control-site-init-files)
+    1. [Push to a Remote Repository](#51-push-to-a-remote-repository)
+1. [Customer-Specific Customizations](#6-customer-specific-customizations)
 
 ## Prerequisites
 
 The procedures on this page assumes that the `SYSTEM_NAME`, `CSM_RELEASE`, `CSM_PATH`, and `PITDATA` variables are
-set and exported. This is normally done as part of the [Bootstrap PIT Node](index.md#bootstrap_pit_node) procedure.
+set and exported. This is normally done as part of the [Bootstrap PIT Node](index.md#2-bootstrap-pit-node) procedure.
 
 ```bash
 linux# echo -e "CSM_PATH=${CSM_PATH}\nCSM_RELEASE=${CSM_RELEASE}\nPITDATA=${PITDATA}\nSYSTEM_NAME=${SYSTEM_NAME}"
 ```
 
-<a name="background"></a>
+<a name="1-background"></a>
 ## 1. Background
 
 The `shasta-cfg` directory included in the CSM release tarball includes relatively static,
@@ -39,7 +39,7 @@ installation-centric artifacts, such as:
 *   Helm Chart value overrides that are merged into Loftsman Manifests by
     product stream installers
 
-<a name="create-and-initialize-site-init-directory"></a>
+<a name="2-create-and-initialize-site-init-directory"></a>
 ## 2. Create and Initialize Site-Init Directory
 
 1.  Set the `SITE_INIT` variable.
@@ -82,7 +82,7 @@ installation-centric artifacts, such as:
         yq version 3.3.0
         ```
 
-<a name="create-baseline-system-customizations"></a>
+<a name="3-create-baseline-system-customizations"></a>
 ### 3. Create Baseline System Customizations
 
 The following steps update `${SITE_INIT}/customizations.yaml`
@@ -471,7 +471,7 @@ with system-specific customizations.
 
    See [Prometheus SNMP Exporter](../operations/network/management_network/snmp_exporter_configs.md) for more information.
 
-<a name="generate-sealed-secrets"></a>
+<a name="4-generate-sealed-secrets"></a>
 ## 4. Generate Sealed Secrets
 
 Secrets are stored in `customizations.yaml` as `SealedSecret` resources (that is,
@@ -537,7 +537,7 @@ encrypted.
     Generating type static...
     ```
 
-<a name="version-control-site-init-files"></a>
+<a name="5-version-control-site-init-files"></a>
 ## 5. Version Control Site-Init Files
 
 Setup `site-init` as a Git repository in order to manage the
@@ -580,14 +580,14 @@ baseline configuration during initial system installation.
     linux# git commit -m "Baseline configuration for $(${CSM_PATH}/lib/version.sh)"
     ```
 
-<a name="push-to-a-remote-repository"></a>
+<a name="51-push-to-a-remote-repository"></a>
 ### 5.1 Push to a Remote Repository
 
 It is **strongly recommended** that the `site-init` repository be maintained
 off-cluster. Add a remote repository and push the baseline configuration on
 `master` branch to a corresponding remote branch.
 
-<a name="customer-specific-customizations"></a>
+<a name="6-customer-specific-customizations"></a>
 ## 6. Customer-Specific Customizations
 
 Customer-specific customizations are any changes on top of the baseline

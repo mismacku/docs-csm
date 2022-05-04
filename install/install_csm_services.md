@@ -119,4 +119,4 @@ Known potential issues with suggested fixes are listed in [Troubleshoot Nexus](.
 
 After completing this procedure the next step is to validate CSM health before redeploying the final NCN.
 
-See [Validate CSM Health Before Final NCN Deployment](index.md#validate_csm_health_before_final_ncn_deploy)
+See [Validate CSM Health Before Final NCN Deployment](index.md#7-validate-csm-health-before-final-ncn-deployment)

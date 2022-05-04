@@ -111,7 +111,7 @@ the Kubernetes cluster as the final of three master nodes, forming a quorum.
 
 1. Validate that `CSM_RELEASE` and `CSM_PATH` variables are set.
 
-    These variables were set and added to `/etc/environment` during the earlier [Bootstrap PIT Node](index.md#bootstrap_pit_node) step of the install.
+    These variables were set and added to `/etc/environment` during the earlier [Bootstrap PIT Node](index.md#2-bootstrap-pit-node) step of the install.
     `CSM_PATH` should be the fully-qualified path to the expanded CSM release tarball on `ncn-m001`.
 
     ```bash
@@ -461,7 +461,7 @@ the Kubernetes cluster as the final of three master nodes, forming a quorum.
     If this machine does not have direct internet access, then this RPM will need to be
     externally downloaded and then copied to this machine.
 
-    See [Check for Latest Documentation](../update_product_stream/index.md#documentation)
+    See [Check for Latest Documentation](../update_product_stream/index.md#check-for-latest-documentation)
 
 1. Exit the typescript and move the backup to `ncn-m001`.
 
@@ -585,4 +585,4 @@ However, the commands in this section are all run **on** `ncn-m001`.
 
 ## Next Topic
 
-After completing this procedure, the next step is to [Configure Administrative Access](index.md#configure_administrative_access).
+After completing this procedure, the next step is to [Configure Administrative Access](index.md#9-configure-administrative-access).

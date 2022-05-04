@@ -55,4 +55,4 @@
 
    For more information on this script, see [Automatically Apply CSM Configuration to NCNs](../../operations/CSM_product_management/Configure_Non-Compute_Nodes_with_CFS.md#automatically-apply-csm-configuration-to-ncns)
 
-Once `Stage 5` upgrade is complete, proceed to [*Validate CSM Health*](../index.md#validate_csm_health) on the main upgrade page.
+Once `Stage 5` upgrade is complete, proceed to [*Validate CSM Health*](../index.md#10-validate-csm-health) on the main upgrade page.
