@@ -55,7 +55,7 @@ sections, but there is also a general troubleshooting topic.
      3. [Software Management Services Validation Utility](../operations/validate_csm_health.md#sms-health-checks)
      4. [Validate UAS and UAI Functionality](../operations/validate_csm_health.md#uas-uai-validate)
 
-     Booting the barebones image on the compute nodes should be skipped if the compute nodes have been running
+     Booting the Barebones image on the compute nodes should be skipped if the compute nodes have been running
      application workload during the the CSM upgrade.
 
      See [Validate CSM Health](../operations/validate_csm_health.md)
